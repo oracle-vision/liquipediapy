@@ -134,13 +134,14 @@ class dota():
 		games = []
 		soup,__ = self.liquipedia.parse('Liquipedia:Upcoming_and_ongoing_matches')
 		matches = soup.find_all('table',class_='infobox_matches_content')
+		matches = list(filter(lambda x : bool(re.search('TBD', x.get_text())) == False, matches))
 		for match in matches:
 			game = {}
 			cells = match.find_all('td')
 			try:
-				game['team1'] = cells[0].find('span',class_='team-template-image').find('a').get('title')			
+				game['team1'] = cells[0].find('span',class_='team-template-text').find('a').get('title')			
 				game['format'] = cells[1].find('abbr').get_text()
-				game['team2'] = cells[2].find('span',class_='team-template-image').find('a').get('title')
+				game['team2'] = cells[2].find('span',class_='team-template-text').find('a').get('title')
 				game['start_time'] = cells[3].find('span',class_="timer-object").get_text()
 				game['tournament'] = cells[3].find('div').a['title']
 				game['tournament_short_name'] = cells[3].find('div').get_text().rstrip()
